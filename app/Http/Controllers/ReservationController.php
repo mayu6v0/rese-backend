@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReservationRequest;
 
 class ReservationController extends Controller
 {
@@ -15,7 +16,7 @@ class ReservationController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(ReservationRequest $request)
     {
         $item = Reservation::create($request->all());
         return response()->json([
@@ -41,7 +42,7 @@ class ReservationController extends Controller
      * @param  \App\Models\Reservation  $reservation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(ReservationRequest $request, Reservation $reservation)
     {
         $update = [
             'user_id' => $request->user_id,
