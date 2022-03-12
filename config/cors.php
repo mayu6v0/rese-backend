@@ -19,6 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
+    //ここを入力しないと違うホストのものが弾かれる
     'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],

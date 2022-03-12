@@ -43,7 +43,22 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
-        //
+        $update = [
+            'user_id' => $request->user_id,
+            'restaurant_id' => $request->restaurant_id,
+            'datetime' => $request->datetime,
+            'number' => $request->number
+        ];
+        $item = Reservation::where('id', $reservation->id)->update($update);
+        if ($item) {
+            return response()->json([
+                'message' => 'Updated successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
     }
 
     /**

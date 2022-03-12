@@ -10,12 +10,9 @@ class Reservation extends Model
     use HasFactory;
 
     protected $guarded = array('id');
-    public static $rules = array(
-        'user_id' => 'required',
-        'restaurant_id' => 'required',
-        'datetime' => 'required',
-        'number' => 'required',
-    );
+    protected $fillable = [
+        'user_id', 'restaurant_id', 'datetime', 'number'
+    ];
 
     public function restaurant()
     {
