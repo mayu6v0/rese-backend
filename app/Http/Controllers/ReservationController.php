@@ -10,10 +10,17 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        $items = Reservation::with('restaurant')->get();
+        //ログインユーザーの予約情報のみ取得
+        $items = Reservation::get_user_reservation();
         return response()->json([
             'data' => $items
         ], 200);
+
+        //全ての予約情報を取得
+        // $items = Reservation::with('restaurant')->get();
+        // return response()->json([
+        //     'data' => $items
+        // ], 200);
     }
 
     public function store(ReservationRequest $request)

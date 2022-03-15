@@ -9,10 +9,15 @@ class FavoriteController extends Controller
 {
     public function index()
     {
-        $items = Favorite::with(['restaurant.area', 'restaurant.genre'])->get();
+        $items = Favorite::get_user_favorite();
         return response()->json([
             'data' => $items
         ], 200);
+        // 全てのお気に入り情報を取得
+        // $items = Favorite::with(['restaurant.area', 'restaurant.genre'])->get();
+        // return response()->json([
+        //     'data' => $items
+        // ], 200);
     }
 
     public function store(Request $request)
