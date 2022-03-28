@@ -18,7 +18,7 @@ class CreateReviewsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('restaurant_id')->constrained();
             $table->foreignId('reservation_id')->constrained();
-            $table->integer('grade');
+            $table->integer('rating');
             $table->string('title');
             $table->text('review');
             $table->timestamp('created_at')->useCurrent()->nullable();

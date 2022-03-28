@@ -11,7 +11,7 @@ class Review extends Model
 
     protected $guarded = array('id');
     protected $fillable = [
-        'user_id', 'restaurant_id', 'reservation_id', 'grade', 'title', 'review'
+        'user_id', 'restaurant_id', 'reservation_id', 'rating', 'title', 'review'
     ];
 
     public function restaurant()
