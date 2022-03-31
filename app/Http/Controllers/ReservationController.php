@@ -11,7 +11,8 @@ class ReservationController extends Controller
     public function index()
     {
         //ログインユーザーの予約情報のみ取得
-        $items = Reservation::get_user_reservation();
+        $user_id = auth()->user()->id;
+        $items = Reservation::with('restaurant')->where('user_id', $user_id)->orderBy('datetime', 'asc')->get();
         return response()->json([
             'data' => $items
         ], 200);

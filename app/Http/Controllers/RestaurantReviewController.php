@@ -5,19 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
-class ReviewController extends Controller
+class RestaurantReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        //ログインユーザーのレビュー情報のみ取得
-        $user_id = auth()->user()->id;
-        $items = Review::with('restaurant')->where('user_id', $user_id)->get();
+        $items = Review::with('restaurant')->where('restaurant_id', $request->restaurant_id)->get();
         return response()->json([
             'data' => $items
         ], 200);
