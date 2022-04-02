@@ -2,6 +2,7 @@
 
 return [
     'defaults' => [
+        // 'guard' => 'web', apiに変更
         'guard' => 'api',
         'passwords' => 'users',
     ],
@@ -12,6 +13,7 @@ return [
             'provider' => 'users',
         ],
 
+        // api追加
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -24,6 +26,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        // 追加
+        // 'admins' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Admin::class,
+        // ]
 
         // 'users' => [
         //     'driver' => 'database',
