@@ -24,6 +24,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'authority',
+        'restaurant_id'
     ];
 
     /**
@@ -58,4 +60,8 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
     //追加終わり
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 }

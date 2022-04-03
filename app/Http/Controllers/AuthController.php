@@ -21,7 +21,9 @@ class AuthController extends Controller
         User::create([
             "name" => $request->name,
             "email" => $request->email,
-            "password" => Hash::make($request->password)
+            "password" => Hash::make($request->password),
+            "authority" => $request->authority,
+            "restaurant_id" => $request->restaurant_id,
         ]);
 
         return response()->json(['message' => 'Successfully user create']);
@@ -63,4 +65,19 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+    public function owner()
+    {
+        $items = User::with('restaurant')->where('authority', 'owner')->get();
+        return response()->json([
+            'data' => $items
+        ], 200);
+    }
+    public function admin()
+    {
+        $items = User::with('restaurant')->where('authority', 'admin')->get();
+        return response()->json([
+            'data' => $items
+        ], 200);
+    }
+
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
-class RestaurantReviewController extends Controller
+class OwnerReviewController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -18,6 +18,10 @@ class Reservation extends Model
     {
         return $this->belongsTo(Restaurant::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public static function get_user_reservation()
     {

@@ -16,12 +16,6 @@ class ReservationController extends Controller
         return response()->json([
             'data' => $items
         ], 200);
-
-        //全ての予約情報を取得
-        // $items = Reservation::with('restaurant')->get();
-        // return response()->json([
-        //     'data' => $items
-        // ], 200);
     }
 
     public function store(ReservationRequest $request)

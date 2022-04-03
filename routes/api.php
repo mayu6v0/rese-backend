@@ -9,7 +9,8 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\RestaurantReviewController;
+use App\Http\Controllers\OwnerReviewController;
+use App\Http\Controllers\OwnerReservationController;
 
 
 
@@ -23,6 +24,8 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('user', [AuthController::class, 'me']);
+    Route::get('owner', [AuthController::class, 'owner'])->withoutMiddleware(['auth:api']);
+    Route::get('admin', [AuthController::class, 'admin'])->withoutMiddleware(['auth:api']);
 });
 
 
@@ -31,5 +34,6 @@ Route::apiResources([
     '/reservation' => ReservationController::class,
     '/favorite' => FavoriteController::class,
     '/review' => ReviewController::class,
-    '/restaurantreview' => RestaurantReviewController::class
+    '/restaurantreview' => OwnerReviewController::class,
+    '/owner/reservation' => OwnerReservationController::class,
 ]);

@@ -23,7 +23,10 @@ class RestaurantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $item = Restaurant::create($request->all());
+        return response()->json([
+            'data' => $item
+        ], 201);
     }
 
     /**
@@ -55,7 +58,23 @@ class RestaurantController extends Controller
      */
     public function update(Request $request, Restaurant $restaurant)
     {
-        //
+        $update = [
+            'name' => $request->name,
+            'image_url' => $request->image_url,
+            'area_id' => $request->area_id,
+            'genre_id' => $request->genre_id,
+            'overview' => $request->overview,
+        ];
+        $item = Restaurant::where('id', $restaurant->id)->update($update);
+        if ($item) {
+            return response()->json([
+                'message' => 'Updated successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
     }
 
     /**
