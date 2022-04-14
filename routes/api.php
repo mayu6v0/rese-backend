@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RestaurantReviewController;
 use App\Http\Controllers\OwnerReservationController;
+use App\Http\Controllers\SendEmailController;
 
 
 
@@ -37,3 +38,5 @@ Route::apiResources([
     '/restaurantreview' => RestaurantReviewController::class,
     '/owner/reservation' => OwnerReservationController::class,
 ]);
+
+Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
