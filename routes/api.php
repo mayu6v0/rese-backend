@@ -9,7 +9,7 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\OwnerReviewController;
+use App\Http\Controllers\RestaurantReviewController;
 use App\Http\Controllers\OwnerReservationController;
 
 
@@ -34,6 +34,6 @@ Route::apiResources([
     '/reservation' => ReservationController::class,
     '/favorite' => FavoriteController::class,
     '/review' => ReviewController::class,
-    '/restaurantreview' => OwnerReviewController::class,
+    '/restaurantreview' => RestaurantReviewController::class,
     '/owner/reservation' => OwnerReservationController::class,
 ]);

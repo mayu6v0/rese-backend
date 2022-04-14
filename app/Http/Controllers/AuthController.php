@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -25,6 +26,9 @@ class AuthController extends Controller
             "authority" => $request->authority,
             "restaurant_id" => $request->restaurant_id,
         ]);
+        // event(new Registered($user = $this->create($request->all())));
+
+        // event(new Registered($user));
 
         return response()->json(['message' => 'Successfully user create']);
     }

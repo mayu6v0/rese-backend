@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 //以下の1文を追加
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 //以下の1文を修正
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -63,5 +64,9 @@ class User extends Authenticatable implements JWTSubject
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 }
