@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\ReservationRequest;
+use App\Mail\SendReservationMail;
+use Illuminate\Support\Facades\Mail;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+
 
 class ReservationController extends Controller
 {
@@ -21,6 +26,19 @@ class ReservationController extends Controller
     public function store(ReservationRequest $request)
     {
         $item = Reservation::create($request->all());
+        $user = auth()->user();
+        $name = $user->name;
+        $datetime = $item->datetime;
+        $restaurant = $item->restaurant->name;
+        $number = $item->number;
+        $qrcodeImage = QrCode::generate($item);
+        // $qrcodeImage = QrCode::format('png')->size(100)->generate($item);
+
+        Mail::to($user)
+        ->send(new SendReservationMail($item, $name, $datetime, $restaurant, $number));
+
+
+        // return response($qrcodeImage);
         return response()->json([
             'data' => $item
         ], 201);
