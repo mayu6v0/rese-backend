@@ -63,7 +63,7 @@
           <td>{{$number}}名</td>
         </tr>
       </table>
-      <p>ご予約の変更・キャンセルは<a href="http://127.0.0.1:3000/mypage">マイページ</a>からお願いします。</p>
+      <p>ご予約の変更・キャンセルは<a href="https://rese-nuxt.herokuapp.com/mypage">マイページ</a>からお願いします。</p>
     </div>
     <div class="qrcode">
       {!! QrCode::encoding('UTF-8')->size(100)->generate('照合する内容'); !!}
