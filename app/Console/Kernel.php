@@ -16,9 +16,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('send_confirmation_mail')->dailyAt('09:00');
+        $schedule->command('send_confirmation_mail')->dailyAt('15:20');
         //確認用
-        $schedule->command('send_confirmation_mail')->everyMinute();
+        // $schedule->command('send_confirmation_mail')->everyMinute();
     }
 
     /**
