@@ -33,6 +33,10 @@
   table th {
     text-align: left;
   }
+
+  .qrcode {
+    margin-top: 30px;
+  }
 </style>
 
 <body>
@@ -58,6 +62,10 @@
         <td>{{$number}}名</td>
       </tr>
     </table>
+    <div class="qrcode">
+      {!! QrCode::encoding('UTF-8')->generate('照合する内容'); !!}
+      <p hidden>QRコード</p>
+    </div>
   </div>
 </body>
 

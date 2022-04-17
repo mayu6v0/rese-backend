@@ -34,8 +34,8 @@
     text-align: left;
   }
 
-  .qr-code {
-    margin-top: 20px;
+  .qrcode {
+    margin-top: 30px;
   }
 </style>
 
@@ -66,8 +66,10 @@
       <p>ご予約の変更・キャンセルは<a href="https://rese-nuxt.herokuapp.com/mypage">マイページ</a>からお願いします。</p>
     </div>
     <div class="qrcode">
-      {!! QrCode::encoding('UTF-8')->size(100)->generate('照合する内容'); !!}
-      <p>QRコード</p>
+      <p>ご来店当日、店舗にてこちらのQRコードをご提示いただくとご案内がスムーズです。
+      </p>
+      {!! QrCode::encoding('UTF-8')->generate('照合する内容'); !!}
+      <p hidden>QRコード</p>
     </div>
   </div>
 </body>
