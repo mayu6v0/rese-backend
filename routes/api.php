@@ -5,9 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\AreaController;
-use App\Http\Controllers\GenreController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VerificationController; //追加
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RestaurantReviewController;
 use App\Http\Controllers\OwnerReservationController;
@@ -27,6 +26,10 @@ Route::group([
     Route::get('user', [AuthController::class, 'me']);
     Route::get('owner', [AuthController::class, 'owner'])->withoutMiddleware(['auth:api']);
     Route::get('admin', [AuthController::class, 'admin'])->withoutMiddleware(['auth:api']);
+    Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->withoutMiddleware(['auth:api'])
+    ->name('verification.verify');
+    Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend')->withoutMiddleware(['auth:api']);
 });
 
 
