@@ -17,13 +17,14 @@ class SendReservationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($item, $name, $datetime, $restaurant, $number)
+    public function __construct($item, $name, $datetime, $restaurant, $number, $signed_url)
     {
         $this->item = $item;
         $this->name = $name;
         $this->restaurant = $restaurant;
         $this->datetime = $datetime;
         $this->number = $number;
+        $this->signed_url = $signed_url;
     }
 
     /**
@@ -33,15 +34,18 @@ class SendReservationMail extends Mailable
      */
     public function build()
     {
+        $prefix = config('app.frontend_url') . config('app.reservation_check_url');
+
         return $this->from('rese@example.com', 'Rese')
-        ->view('emails.reservation_mail')
-        ->subject('ご予約完了メール')
-        ->with([
-            'item' => $this->item,
-            'name' => $this->name,
-            'restaurant' => $this->restaurant,
-            'datetime' => $this->datetime,
-            'number' => $this->number,
-        ]);
+            ->view('emails.reservation_mail')
+            ->subject('ご予約完了メール')
+            ->with([
+                'item' => $this->item,
+                'name' => $this->name,
+                'restaurant' => $this->restaurant,
+                'datetime' => $this->datetime,
+                'number' => $this->number,
+                'signed_url' => $prefix . urlencode($this->signed_url)
+            ]);
     }
 }

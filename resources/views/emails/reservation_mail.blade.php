@@ -68,7 +68,7 @@
     <div class="qrcode">
       <p>ご来店当日、店舗にてこちらのQRコードをご提示いただくとご案内がスムーズです。
       </p>
-      {!! QrCode::encoding('UTF-8')->generate('照合する内容'); !!}
+      {!! QrCode::encoding('UTF-8')->generate($signed_url); !!}
       <p hidden>QRコード</p>
     </div>
   </div>

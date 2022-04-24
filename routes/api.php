@@ -11,6 +11,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RestaurantReviewController;
 use App\Http\Controllers\OwnerReservationController;
 use App\Http\Controllers\SendEmailController;
+use App\Http\Controllers\ReservationCheckController;
 
 
 
@@ -28,7 +29,7 @@ Route::group([
     Route::get('admin', [AuthController::class, 'admin'])->withoutMiddleware(['auth:api']);
     Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])
     ->withoutMiddleware(['auth:api'])
-    ->name('verification.verify');
+    ->name('verification.verify')->middleware('signed');
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend')->withoutMiddleware(['auth:api']);
 });
 
@@ -43,3 +44,4 @@ Route::apiResources([
 ]);
 
 Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
+Route::get('/owner/reservation-check', [ReservationCheckController::class, 'reservationCheck'])->name('reservation.check')->middleware('signed');

@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ReservationRequest;
 use App\Mail\SendReservationMail;
 use Illuminate\Support\Facades\Mail;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+// use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\URL;
+
 
 
 
@@ -28,17 +30,15 @@ class ReservationController extends Controller
         $item = Reservation::create($request->all());
         $user = auth()->user();
         $name = $user->name;
+        $reservation_id = $item->id;
         $datetime = $item->datetime;
         $restaurant = $item->restaurant->name;
         $number = $item->number;
-        $qrcodeImage = QrCode::generate($item);
-        // $qrcodeImage = QrCode::format('png')->size(100)->generate($item);
+        $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation_id]);
 
         Mail::to($user)
-        ->send(new SendReservationMail($item, $name, $datetime, $restaurant, $number));
+        ->send(new SendReservationMail($item, $name, $datetime, $restaurant, $number, $signed_url));
 
-
-        // return response($qrcodeImage);
         return response()->json([
             'data' => $item
         ], 201);

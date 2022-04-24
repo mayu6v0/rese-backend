@@ -55,8 +55,10 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'frontend_url' => env('FRONTEND_URL', 'https://rese-nuxt.herokuapp.com'),
-    
+
     'email_verify_url' => env('FRONTEND_EMAIL_VERIFY_URL', '/auth/emailverification?queryURL='),
+
+    'reservation_check_url' => env('FRONTEND_RESERVATION_CHECK_URL', '/owner/reservationcheck?queryURL='),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -84,7 +86,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'ja',
 
     /*
     |--------------------------------------------------------------------------
