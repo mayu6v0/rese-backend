@@ -58,7 +58,7 @@ return [
 
     'email_verify_url' => env('FRONTEND_EMAIL_VERIFY_URL', '/auth/emailverification?queryURL='),
 
-    'reservation_check_url' => env('FRONTEND_RESERVATION_CHECK_URL', '/owner/reservationcheck?queryURL='),
+    'reservation_check_url' => env('FRONTEND_RESERVATION_CHECK_URL', '/reservationcheck?queryURL='),
 
     'asset_url' => env('ASSET_URL', null),
 
