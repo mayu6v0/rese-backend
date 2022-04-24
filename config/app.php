@@ -54,9 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
-
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
+    'frontend_url' => env('FRONTEND_URL', 'https://rese-nuxt.herokuapp.com'),
+    
+    'email_verify_url' => env('FRONTEND_EMAIL_VERIFY_URL', '/auth/emailverification?queryURL='),
 
     'asset_url' => env('ASSET_URL', null),
 
