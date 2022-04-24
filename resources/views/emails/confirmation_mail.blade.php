@@ -63,7 +63,7 @@
       </tr>
     </table>
     <div class="qrcode">
-      {!! QrCode::encoding('UTF-8')->generate('照合する内容'); !!}
+      {!! QrCode::encoding('UTF-8')->generate('$signed_url'); !!}
       <p hidden>QRコード</p>
     </div>
   </div>

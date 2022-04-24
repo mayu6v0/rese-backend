@@ -7,6 +7,8 @@ use App\Models\Reservation;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendConfirmationMail;
 use DateTime;
+use Illuminate\Support\Facades\URL;
+
 
 
 class SendConfirmationMailCommand extends Command
@@ -52,8 +54,10 @@ class SendConfirmationMailCommand extends Command
             $datetime = $reservation->datetime;
             $restaurant = $reservation->restaurant->name;
             $number = $reservation->number;
+            $reservation_id = $reservation->id;
+            $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation_id]);
             Mail::to($user)
-            ->send(new SendConfirmationMail($name, $restaurant, $datetime, $number));
+            ->send(new SendConfirmationMail($name, $restaurant, $datetime, $number, $signed_url));
         }
     }
 }

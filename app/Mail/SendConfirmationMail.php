@@ -17,12 +17,14 @@ class SendConfirmationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($name, $restaurant, $datetime, $number)
+    public function __construct($name, $restaurant, $datetime, $number, $signed_url)
     {
         $this->name = $name;
         $this->restaurant = $restaurant;
         $this->datetime = $datetime;
         $this->number = $number;
+        $this->signed_url = $signed_url;
+
     }
 
     /**
@@ -32,6 +34,7 @@ class SendConfirmationMail extends Mailable
      */
     public function build()
     {
+        $prefix = config('app.frontend_url') . config('app.reservation_check_url');
         return $this->from('rese@example.com', 'Rese')
         ->view('emails.confirmation_mail')
         ->subject('ご予約確認メール')
@@ -40,6 +43,7 @@ class SendConfirmationMail extends Mailable
             'restaurant' => $this->restaurant,
             'datetime' => $this->datetime,
             'number' => $this->number,
+            'signed_url' => $prefix . urlencode($this->signed_url)
         ]);
     }
 }
