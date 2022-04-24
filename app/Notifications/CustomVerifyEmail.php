@@ -16,10 +16,10 @@ class CustomVerifyEmail extends Notification
     use Queueable;
 
     //**
-     * The callback that should be used to create the verify email URL.
-     *
-     * @var \Closure|null
-     */
+    //  * The callback that should be used to create the verify email URL.
+    //  *
+    //  * @var \Closure|null
+    //  */
     public static $createUrlCallback;
 
     /**
