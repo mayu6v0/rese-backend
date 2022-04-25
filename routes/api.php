@@ -6,15 +6,12 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\VerificationController; //追加
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RestaurantReviewController;
 use App\Http\Controllers\OwnerReservationController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\ReservationCheckController;
-
-
-
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -33,15 +30,36 @@ Route::group([
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend')->withoutMiddleware(['auth:api']);
 });
 
+Route::get('/restaurant', [RestaurantController::class, 'index']);
+Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'show']);
+Route::get('/restaurantreview', [RestaurantReviewController::class, 'index']);
 
-Route::apiResources([
-    '/restaurant' => RestaurantController::class,
+Route::middleware(['verified'])->group(function () {
+    Route::apiResources([
     '/reservation' => ReservationController::class,
     '/favorite' => FavoriteController::class,
-    '/review' => ReviewController::class,
-    '/restaurantreview' => RestaurantReviewController::class,
-    '/owner/reservation' => OwnerReservationController::class,
-]);
+    '/review' => ReviewController::class
+    ]);
+});
 
-Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
-Route::get('/owner/reservation-check', [ReservationCheckController::class, 'reservationCheck'])->name('reservation.check')->middleware('signed');
+Route::middleware(['verified', 'admin'])->group(function () {
+    Route::post('/restaurant', [RestaurantController::class, 'store']);
+    Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
+});
+
+Route::middleware(['verified', 'owner'])->group(function () {
+    Route::put('restaurant/{restaurant}', [RestaurantController::class, 'update']);
+    Route::get('/owner/reservation', [OwnerReservationController::class, 'index']);
+    Route::get('/owner/reservation-check', [ReservationCheckController::class, 'reservationCheck'])->name('reservation.check')->middleware('signed');
+});
+
+
+
+
+
+
+
+
+
+
+

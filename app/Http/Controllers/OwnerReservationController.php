@@ -9,7 +9,7 @@ class OwnerReservationController extends Controller
 {
     public function index(Request $request)
     {
-        $items = Reservation::with(['restaurant', 'user'])->where('restaurant_id', $request->restaurant_id)->get();
+        $items = Reservation::with(['restaurant', 'user'])->where('restaurant_id', $request->restaurant_id)->orderBy('datetime', 'asc')->get();
         return response()->json([
             'data' => $items
         ], 200);

@@ -13,19 +13,11 @@ class Favorite extends Model
     // public static $rules = array(
     //     'user_id' => 'required',
     //     'restaurant_id' => 'required',
-    //     'datetime' => 'required',
-    //     'number' => 'required',
+    //
     // );
 
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
-    }
-
-    public static function get_user_favorite()
-    {
-        $user_id = auth()->user()->id;
-        $items = Favorite::with(['restaurant.area', 'restaurant.genre'])->where('user_id', $user_id)->get();
-        return $items;
     }
 }

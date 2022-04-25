@@ -14,18 +14,12 @@ class ReviewController extends Controller
      */
     public function index()
     {
-
         //ログインユーザーのレビュー情報のみ取得
         $user_id = auth()->user()->id;
         $items = Review::with('restaurant')->where('user_id', $user_id)->get();
         return response()->json([
             'data' => $items
         ], 200);
-        //全てのレビュー情報を返す
-        // $items = Review::with('restaurant')->where('restaurant_id', $request->restaurant_id)->get();
-        // return response()->json([
-        //     'data' => $items
-        // ], 200);
     }
 
     /**
