@@ -68,6 +68,24 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+
+    public function update(Request $request)
+    {
+        $update = [
+            'restaurant_id' => $request->restaurant_id,
+        ];
+        $user = User::where('id', auth()->user()->id)->update($update);
+        if ($user) {
+            return response()->json([
+                'message' => 'Updated successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
+    }
+
     public function owner()
     {
         $items = User::with('restaurant')->where('authority', 'owner')->get();

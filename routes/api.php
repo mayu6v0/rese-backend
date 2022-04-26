@@ -22,6 +22,7 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('user', [AuthController::class, 'me']);
+    Route::put('update', [AuthController::class, 'update']);
     Route::get('owner', [AuthController::class, 'owner'])->withoutMiddleware(['auth:api']);
     Route::get('admin', [AuthController::class, 'admin'])->withoutMiddleware(['auth:api']);
     Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])
@@ -42,12 +43,10 @@ Route::middleware(['verified'])->group(function () {
     ]);
 });
 
-Route::middleware(['verified', 'admin'])->group(function () {
-    Route::post('/restaurant', [RestaurantController::class, 'store']);
-    Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
-});
+Route::post('/sendmail', [SendEmailController::class, 'sendmail'])->middleware(['verified', 'admin']);
 
 Route::middleware(['verified', 'owner'])->group(function () {
+    Route::post('/restaurant', [RestaurantController::class, 'store']);
     Route::put('restaurant/{restaurant}', [RestaurantController::class, 'update']);
     Route::get('/owner/reservation', [OwnerReservationController::class, 'index']);
     Route::get('/owner/reservation-check', [ReservationCheckController::class, 'reservationCheck'])->name('reservation.check')->middleware('signed');
