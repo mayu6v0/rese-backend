@@ -26,7 +26,7 @@ class ReservationRequest extends FormRequest
         return [
             'user_id' => 'required|integer',
             'restaurant_id' => 'required|integer',
-            'datetime' => 'required|date_format:Y-m-d H:i',
+            'datetime' => 'required|date_format:Y-m-d H:i|after_or_equal:now',
             'number' => 'required|integer|max:20',
         ];
     }
