@@ -20,8 +20,8 @@ return [
     'allowed_methods' => ['*'],
 
     //ここを入力しないと違うホストのものが弾かれる
-    // 'allowed_origins' => ['*'],
-    'allowed_origins' => [env('FRONTEND_URL', 'https://rese-nuxt.herokuapp.com')],
+    'allowed_origins' => ['*'],
+    // 'allowed_origins' => [env('FRONTEND_URL', 'https://rese-nuxt.herokuapp.com')],
 
     'allowed_origins_patterns' => [],
 

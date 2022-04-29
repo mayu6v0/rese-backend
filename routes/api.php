@@ -12,6 +12,7 @@ use App\Http\Controllers\RestaurantReviewController;
 use App\Http\Controllers\OwnerReservationController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\ReservationCheckController;
+use App\Http\Controllers\ImageController;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -26,8 +27,8 @@ Route::group([
     Route::get('owner', [AuthController::class, 'owner'])->withoutMiddleware(['auth:api']);
     Route::get('admin', [AuthController::class, 'admin'])->withoutMiddleware(['auth:api']);
     Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->withoutMiddleware(['auth:api'])
-    ->name('verification.verify')->middleware('signed');
+        ->withoutMiddleware(['auth:api'])
+        ->name('verification.verify')->middleware('signed');
     Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend')->withoutMiddleware(['auth:api']);
 });
 
@@ -37,9 +38,9 @@ Route::get('/restaurantreview', [RestaurantReviewController::class, 'index']);
 
 Route::middleware(['verified'])->group(function () {
     Route::apiResources([
-    '/reservation' => ReservationController::class,
-    '/favorite' => FavoriteController::class,
-    '/review' => ReviewController::class
+        '/reservation' => ReservationController::class,
+        '/favorite' => FavoriteController::class,
+        '/review' => ReviewController::class
     ]);
 });
 
@@ -52,13 +53,4 @@ Route::middleware(['verified', 'owner'])->group(function () {
     Route::get('/owner/reservation-check', [ReservationCheckController::class, 'reservationCheck'])->name('reservation.check')->middleware('signed');
 });
 
-
-
-
-
-
-
-
-
-
-
+Route::post('/images', [ImageController::class, 'create'])->name('images.create');
