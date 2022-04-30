@@ -3,9 +3,9 @@ Rese(リーズ)はある企業のグループ会社の飲食店予約サービ�
 <br>
 <br>
 <br>
-　* フロントエンドとしてrese-frontendの使用を前提としています。
+フロントエンドとしてrese-frontendの使用を前提としています。
 <br>
-      [rese-frontend](https://github.com/mayu6v0/rese-fronrtend.git)
+[rese-frontend](https://github.com/mayu6v0/rese-fronrtend.git)
 
 ## 開発環境
 * Nuxt.js　2.15.8
@@ -55,31 +55,29 @@ $ create database [データベース名];
 
 
 # 環境変数の設定
-.envファイルを作成し必要に応じて環境変数を設定してください
+.envファイルを作成し必要に応じて環境変数を設定してください。
+<br>
+DB_DATABASEは上記で作成したデータベース名を設定してください。
+フロントエンドのURLはFRONTEND_URLに記述します。
+
+# テーブルの作成
+$ php artisan migrate
 
 # 暗号化処理のkeyを生成
 プロジェクトフォルダ直下にて
 $ php artisan key:generate
 
-生成されたキーは自動的に.envのAPP_KEYに反映されます
+生成されたキーは自動的に.envのAPP_KEYに反映されます。
 
-# テーブルの作成
-$ php artisan migrate
+# JWT-authのシークレットキー生成
+$ php artisan jwt:secret
 
-# フロントエンドのURL設定
-  cross-envを使用し本番環境と開発環境のURLの切り分けが可能です。
-  env.development.js と　env.production.js　
-  それぞれに環境変数に合わせたURLの値を設定してください。
+こちらも生成されたキーは自動的に.envのJWT_SECRETに反映されます。
+
 
 # ローカルサーバーの立ち上げ（localhost:8000）
 $ php artisan serve
 
-#  Node.js サーバにデプロイする場合
-$ yarn build
-$ yarn start
-
-# 静的ホスティングサービスにデプロイする場合
-$ yarn generate
 ```
 
 
