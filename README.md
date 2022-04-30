@@ -5,7 +5,7 @@ Rese(リーズ)はある企業のグループ会社の飲食店予約サービ�
 <br>
 フロントエンドとしてrese-frontendの使用を前提としています。
 <br>
-[rese-frontend](https://github.com/mayu6v0/rese-fronrtend.git)
+[rese-frontend](https://github.com/mayu6v0/rese-frontend.git)
 
 ## 開発環境
 * Nuxt.js　2.15.8
