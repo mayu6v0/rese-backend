@@ -45,19 +45,20 @@ Rese(リーズ)はある企業のグループ会社の飲食店予約サービ�
 
 ## 環境構築方法
 
+
+### パッケージのインストール
+
 ```bash
-# パッケージのインストール
-
 $ composer install
+```
 
-
-# データベース作成
+### データベース作成
 
 MySQLにて
 $ create database [データベース名];
 
 
-# 環境変数の設定
+### 環境変数の設定
 
 .envファイルを作成し必要に応じて環境変数を設定してください。
 
@@ -65,12 +66,12 @@ DB_DATABASEは上記で作成したデータベース名を設定してくださ
 フロントエンドのURLはFRONTEND_URLに記述します。
 
 
-# テーブルの作成
+### テーブルの作成
 
 $ php artisan migrate
 
 
-# 暗号化処理のkeyを生成
+### 暗号化処理のkeyを生成
 
 プロジェクトフォルダ直下にて
 $ php artisan key:generate
@@ -78,14 +79,14 @@ $ php artisan key:generate
 生成されたキーは自動的に.envのAPP_KEYに反映されます。
 
 
-# JWT-authのシークレットキー生成
+### JWT-authのシークレットキー生成
 
 $ php artisan jwt:secret
 
 こちらも生成されたキーは自動的に.envのJWT_SECRETに反映されます。
 
 
-# ローカルサーバーの立ち上げ（localhost:8000）
+### ローカルサーバーの立ち上げ（localhost:8000）
 
 $ php artisan serve
 
