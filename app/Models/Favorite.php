@@ -10,14 +10,17 @@ class Favorite extends Model
     use HasFactory;
 
     protected $guarded = array('id');
-    // public static $rules = array(
-    //     'user_id' => 'required',
-    //     'restaurant_id' => 'required',
-    //
-    // );
+    protected $fillable = [
+        'user_id', 'restaurant_id'
+    ];
 
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
+

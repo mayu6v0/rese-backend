@@ -23,4 +23,8 @@ class Review extends Model
     {
         return $this->belongsTo(Reservation::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

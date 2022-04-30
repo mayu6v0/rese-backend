@@ -22,15 +22,4 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public static function get_user_reservation()
-    {
-        //ユーザーidを直接受け取る
-        // $user_id = $reservation_data->user_id;
-        // $user_id = auth()->user()->id;
-        // $items = Reservation::with('restaurant')->where('user_id', $user_id)->orderBy('datetime', 'asc')->get();
-        // return $items;
-    }
-
-
 }

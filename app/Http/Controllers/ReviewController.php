@@ -42,19 +42,19 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function show(Review $review)
-    {
-        $item = Review::with('restaurant')->where('id', $review->id)->get();
-        if($item) {
-            return response()->json([
-                'data' => $item
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Not found',
-            ], 404);
-        }
-    }
+    // public function show(Review $review)
+    // {
+    //     $item = Review::with('restaurant')->where('id', $review->id)->get();
+    //     if($item) {
+    //         return response()->json([
+    //             'data' => $item
+    //         ], 200);
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'Not found',
+    //         ], 404);
+    //     }
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -63,24 +63,24 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Review $review)
-    {
-        $update = [
-            'grade' => $request->grade,
-            'title' => $request->title,
-            'review' => $request->review
-        ];
-        $item = Review::where('id', $review->id)->update($update);
-        if($item) {
-            return response()->json([
-                'message' => 'Updated successfully',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Not found',
-            ], 404);
-        }
-    }
+    // public function update(Request $request, Review $review)
+    // {
+    //     $update = [
+    //         'grade' => $request->grade,
+    //         'title' => $request->title,
+    //         'review' => $request->review
+    //     ];
+    //     $item = Review::where('id', $review->id)->update($update);
+    //     if($item) {
+    //         return response()->json([
+    //             'message' => 'Updated successfully',
+    //         ], 200);
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'Not found',
+    //         ], 404);
+    //     }
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -88,17 +88,17 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Review $review)
-    {
-        $item = Review::where('id', $review->id)->delete();
-        if($item) {
-            return response()->json([
-                'message' => 'Deleted successfully',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Not found',
-            ], 404);
-        }
-    }
+    // public function destroy(Review $review)
+    // {
+    //     $item = Review::where('id', $review->id)->delete();
+    //     if($item) {
+    //         return response()->json([
+    //             'message' => 'Deleted successfully',
+    //         ], 200);
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'Not found',
+    //         ], 404);
+    //     }
+    // }
 }

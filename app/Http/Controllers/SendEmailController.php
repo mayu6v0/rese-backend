@@ -19,5 +19,8 @@ class SendEmailController extends Controller
             Mail::to($user)
             ->send(new SendMail($mail_title, $mail_text, $name));
         }
+        return response()->json([
+            'message' => 'メール送信に成功しました'
+        ], 200);
     }
 }

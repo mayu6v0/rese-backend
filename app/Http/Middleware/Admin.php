@@ -20,7 +20,7 @@ class Admin
             return $next($request);
         }
         return response()->json([
-            'data' => '権限がありません'
+            'message' => '権限がありません'
         ], 403);
     }
 }

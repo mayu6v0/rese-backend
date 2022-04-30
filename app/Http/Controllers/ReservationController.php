@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ReservationRequest;
 use App\Mail\SendReservationMail;
 use Illuminate\Support\Facades\Mail;
-// use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\URL;
 
 

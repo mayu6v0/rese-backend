@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             // $table->string('authority')->default('user');
-            $table->foreignId('restaurant_id')->constrained()->nullable();
+            // $table->foreignId('restaurant_id')->constrained()->nullable();
             $table->timestamps();
         });
     }
