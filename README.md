@@ -55,8 +55,9 @@ $ composer install
 ### データベース作成
 
 MySQLにて
+```bash
 $ create database [データベース名];
-
+```
 
 ### 環境変数の設定
 
@@ -67,29 +68,29 @@ DB_DATABASEは上記で作成したデータベース名を設定してくださ
 
 
 ### テーブルの作成
-
+```bash
 $ php artisan migrate
-
+```
 
 ### 暗号化処理のkeyを生成
 
 プロジェクトフォルダ直下にて
+```bash
 $ php artisan key:generate
-
+```
 生成されたキーは自動的に.envのAPP_KEYに反映されます。
 
 
 ### JWT-authのシークレットキー生成
-
+```bash
 $ php artisan jwt:secret
-
+```
 こちらも生成されたキーは自動的に.envのJWT_SECRETに反映されます。
 
 
 ### ローカルサーバーの立ち上げ（localhost:8000）
-
+```bash
 $ php artisan serve
-
 ```
 
 
