@@ -4,6 +4,8 @@ namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Hash;
+
 
 class RegistrationTest extends TestCase
 {
@@ -11,14 +13,25 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
-        $response = $this->post('/register', [
+        $data = [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
-            'password_confirmation' => 'password',
+            'authority' => 'user'
+        ];
+        $response = $this->post('/api/auth/register', $data);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users',[
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'email_verified_at' => null,
+            // 'password' => Hash::make($data->password),
+            'remember_token' => null,
+            'authority' => 'user',
+            'restaurant_id' => null
         ]);
-
-        $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response->assertJsonFragment([
+            'message' => 'Successfully user create'
+        ]);
     }
 }

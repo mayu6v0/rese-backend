@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\URL;
 
 class ReservationCheckControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic feature test example.
      *

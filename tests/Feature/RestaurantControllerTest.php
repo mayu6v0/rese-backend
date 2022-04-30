@@ -9,8 +9,6 @@ use App\Models\Restaurant;
 use App\Models\Area;
 use App\Models\Genre;
 use App\Models\User;
-// use Illuminate\Support\Facades\Auth;
-// use Illuminate\Contracts\Auth\Authenticatable;
 
 class RestaurantControllerTest extends TestCase
 {

@@ -27,7 +27,6 @@ class AuthController extends Controller
             "restaurant_id" => $request->restaurant_id,
         ]);
         event(new Registered($user));
-        // Auth::login($user);
 
         return response()->json(['message' => 'Successfully user create']);
     }
