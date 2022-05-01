@@ -19,12 +19,19 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        if($request->authority == 'owner' || $request->authority == 'admin' ) {
+            if(auth()->user()->authority != 'admin') {
+                return response()->json([
+                    'message' => '権限がありません'
+                ], 403);
+            }
+        };
         $user = User::create([
-            "name" => $request->name,
-            "email" => $request->email,
-            "password" => Hash::make($request->password),
-            "authority" => $request->authority,
-            "restaurant_id" => $request->restaurant_id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'authority' => $request->authority,
+            'restaurant_id' => $request->restaurant_id,
         ]);
         event(new Registered($user));
 
