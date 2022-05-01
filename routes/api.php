@@ -54,3 +54,4 @@ Route::middleware(['verified', 'owner'])->group(function () {
 });
 
 Route::post('/images', [ImageController::class, 'create'])->name('images.create');
+Route::get('/images', [ImageController::class, 'index']);
