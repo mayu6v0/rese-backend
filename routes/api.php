@@ -51,7 +51,6 @@ Route::middleware(['verified', 'owner'])->group(function () {
     Route::put('restaurant/{restaurant}', [RestaurantController::class, 'update']);
     Route::get('/owner/reservation', [OwnerReservationController::class, 'index']);
     Route::get('/owner/reservation-check', [ReservationCheckController::class, 'reservationCheck'])->name('reservation.check')->middleware('signed');
+    Route::post('/images', [ImageController::class, 'create']);
+    Route::get('/images', [ImageController::class, 'index']);
 });
-
-Route::post('/images', [ImageController::class, 'create'])->name('images.create');
-Route::get('/images', [ImageController::class, 'index']);
