@@ -23,7 +23,7 @@ class ImageController extends Controller
         $image = $request->file('photo');
         // バケットの`image`フォルダへアップロード
         // $path = Storage::disk('s3')->put('image', $image);
-        $path = Storage::putFileAS('public', $image, 'public');
+        $path = Storage::disk('s3')->put('/', $image, 'public');
         // echo asset('storage/file.txt');
         // アップロードした画像のフルパスを取得
         $image_url = Storage::url($path);
