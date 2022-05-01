@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use App\Http\Requests\RestaurantRequest;
+
 
 class RestaurantController extends Controller
 {
@@ -21,7 +23,7 @@ class RestaurantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RestaurantRequest $request)
     {
         $item = Restaurant::create($request->all());
         return response()->json([
@@ -56,7 +58,7 @@ class RestaurantController extends Controller
      * @param  \App\Models\Restaurant  $restaurant
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Restaurant $restaurant)
+    public function update(RestaurantRequest $request, Restaurant $restaurant)
     {
         $update = [
             'name' => $request->name,

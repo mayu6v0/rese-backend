@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use Illuminate\Http\Request;
+use App\Http\Requests\ReviewRequest;
 
 class ReviewController extends Controller
 {
@@ -28,7 +29,7 @@ class ReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request)
     {
         $item = Review::create($request->all());
         return response()->json([
