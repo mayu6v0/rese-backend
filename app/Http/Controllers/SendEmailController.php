@@ -11,12 +11,20 @@ class SendEmailController extends Controller
 {
     public function sendmail(Request $request)
     {
-        $users = User::get();
+        if($request->mailTo == 'user') {
+            $mail_to = User::get();
+        };
+        if($request->mailTo == 'owner') {
+            $mail_to = User::where('authority', 'owner')->get();
+        };
+        if($request->mailTo == 'admin') {
+            $mail_to = User::where('authority', 'admin')->get();
+        };
         $mail_title = $request->mailTitle;
         $mail_text = $request->mailText;
-        foreach($users as $user) {
-            $name = $user->name;
-            Mail::to($user)
+        foreach($mail_to as $to) {
+            $name = $to->name;
+            Mail::to($to)
             ->send(new SendMail($mail_title, $mail_text, $name));
         }
         return response()->json([
