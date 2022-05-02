@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
 use App\Models\Image;
 
 class ImageController extends Controller
@@ -19,18 +20,17 @@ class ImageController extends Controller
 
     public function create(Request $request)
     {
-        //s3アップロード
-        $image = $request->file('photo');
-        // バケットの`image`フォルダへアップロード
-        // $path = Storage::disk('s3')->put('image', $image);
-        $path = Storage::disk('s3')->put('/', $image, 'public');
-        // echo asset('storage/file.txt');
-        // アップロードした画像のフルパスを取得
-        $image_url = Storage::url($path);
-        // $image_url2 = asset($image_url);
-        // return $image_url;
+        //requestからfileを取得
+        $image = $request->file('uploadimage');
+
+        //s3のimageフォルダにアップロード
+        $path = Storage::disk('s3')->putFile('image', $image, 'public');
+
+        // アップロードした画像のURLを取得
+        $image_url = Storage::URL($path);
+
         $restaurant_id = auth()->user()->restaurant_id;
-        $new_image = Image::create([
+        Image::create([
             'image_url' => $image_url,
             'restaurant_id' => $restaurant_id
         ]);
