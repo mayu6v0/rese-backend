@@ -35,7 +35,7 @@ Route::get('/restaurant', [RestaurantController::class, 'index']);
 Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'show']);
 Route::get('/restaurantreview', [RestaurantReviewController::class, 'index']);
 
-Route::middleware(['auth:api', 'verified'])->group(function () {
+Route::middleware(['verified'])->group(function () {
     Route::apiResources([
         '/reservation' => ReservationController::class,
         '/favorite' => FavoriteController::class,
