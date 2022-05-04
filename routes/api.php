@@ -13,7 +13,7 @@ use App\Http\Controllers\OwnerReservationController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\ReservationCheckController;
 use App\Http\Controllers\ImageController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReservationWithCardController;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -38,9 +38,9 @@ Route::get('/restaurantreview', [RestaurantReviewController::class, 'index']);
 Route::middleware(['verified'])->group(function () {
     Route::apiResources([
         '/reservation' => ReservationController::class,
+        'reservation-card' => ReservationWithCardController::class,
         '/favorite' => FavoriteController::class,
         '/review' => ReviewController::class,
-        '/create-checkout-session' => PaymentController::class
     ]);
 });
 
