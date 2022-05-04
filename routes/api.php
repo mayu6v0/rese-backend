@@ -13,6 +13,7 @@ use App\Http\Controllers\OwnerReservationController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\ReservationCheckController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\PaymentController;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -24,8 +25,6 @@ Route::group([
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('user', [AuthController::class, 'me']);
     Route::put('update', [AuthController::class, 'update']);
-    Route::get('owner', [AuthController::class, 'owner'])->withoutMiddleware(['auth:api']);
-    Route::get('admin', [AuthController::class, 'admin'])->withoutMiddleware(['auth:api']);
     Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])
         ->withoutMiddleware(['auth:api'])
         ->name('verification.verify')->middleware('signed');
@@ -36,15 +35,20 @@ Route::get('/restaurant', [RestaurantController::class, 'index']);
 Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'show']);
 Route::get('/restaurantreview', [RestaurantReviewController::class, 'index']);
 
-Route::middleware(['verified'])->group(function () {
+Route::middleware(['auth:api', 'verified'])->group(function () {
     Route::apiResources([
         '/reservation' => ReservationController::class,
         '/favorite' => FavoriteController::class,
-        '/review' => ReviewController::class
+        '/review' => ReviewController::class,
+        '/create-checkout-session' => PaymentController::class
     ]);
 });
 
-Route::post('/sendmail', [SendEmailController::class, 'sendmail'])->middleware(['verified', 'admin']);
+Route::middleware(['verified', 'admin'])->group(function() {
+    Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
+    Route::get('/auth/owner', [AuthController::class, 'owner']);
+    Route::get('/auth/admin', [AuthController::class, 'admin']);
+});
 
 Route::middleware(['verified', 'owner'])->group(function () {
     Route::post('/restaurant', [RestaurantController::class, 'store']);
