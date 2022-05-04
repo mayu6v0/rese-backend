@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class SendReservationChangeMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    // protected $title;
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($item, $name, $datetime, $restaurant, $number, $signed_url)
+    {
+        $this->item = $item;
+        $this->name = $name;
+        $this->restaurant = $restaurant;
+        $this->datetime = $datetime;
+        $this->number = $number;
+        $this->signed_url = $signed_url;
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        $prefix = config('app.frontend_url') . config('app.reservation_check_url');
+
+        return $this->from('rese@example.com', 'Rese')
+            ->view('emails.reservation_change_mail')
+            ->subject('ご予約変更メール')
+            ->with([
+                'item' => $this->item,
+                'name' => $this->name,
+                'restaurant' => $this->restaurant,
+                'datetime' => $this->datetime,
+                'number' => $this->number,
+                'signed_url' => $prefix . urlencode($this->signed_url)
+            ]);
+    }
+}

@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\ReservationRequest;
 use App\Mail\SendReservationMail;
+use App\Mail\SendReservationChangeMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 
@@ -75,6 +76,7 @@ class ReservationController extends Controller
      */
     public function update(ReservationRequest $request, Reservation $reservation)
     {
+        $user = auth()->user();
         $update = [
             'user_id' => $request->user_id,
             'restaurant_id' => $request->restaurant_id,
@@ -82,7 +84,19 @@ class ReservationController extends Controller
             'number' => $request->number
         ];
         $item = Reservation::where('id', $reservation->id)->update($update);
+
         if ($item) {
+            $update_reservation = Reservation::where('id', $reservation->id)->first();
+            $name = $user->name;
+            $reservation_id = $update_reservation->id;
+            $datetime = $update_reservation->datetime;
+            $restaurant = $update_reservation->restaurant->name;
+            $number = $update_reservation->number;
+            $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation_id]);
+
+            Mail::to($user)
+            ->send(new SendReservationChangeMail($update_reservation, $name, $datetime, $restaurant, $number, $signed_url));
+
             return response()->json([
                 'message' => 'Updated successfully',
             ], 200);
