@@ -21,9 +21,37 @@ class FavoriteControllerTest extends TestCase
      *
      * @return void
      */
+
+     //ユーザーが認証されていない場合アクセスできない
+    public function test_favorite_not_authenticated_users_can_not_access()
+    {
+        $response = $this->get('/api/favorite');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+    //ユーザーがメール認証されていない場合アクセスできない
+    public function test_favorite_not_email_verified_users_can_not_access()
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+
+        $response = $this->actingAs($user)->get('/api/favorite');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+
+    //ユーザーがメール認証されている場合の各メソッドの確認
+
+    //index
     public function test_index_favorite()
     {
-        //ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $item = Favorite::factory()->for($restaurant)->for($user)->create();
@@ -35,22 +63,9 @@ class FavoriteControllerTest extends TestCase
         ]);
     }
 
-    public function test_index_favorite_unauthorized()
-    {
-        //ユーザーが認証されていない
-        $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $item = Favorite::factory()->for($restaurant)->for($user)->create();
-        $response = $this->get('/api/favorite');
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
-    }
-
+    //store
     public function test_store_favorite()
     {
-        //ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $data = [
@@ -63,45 +78,45 @@ class FavoriteControllerTest extends TestCase
         $this->assertDatabaseHas('favorites', $data);
     }
 
-    public function test_store_favorite_unauthorized()
+
+    //store
+    //バリデーションが通らない場合
+    public function test_store_favorite_failed_validation()
     {
-        //ユーザーが認証されていない
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $data = [
-            'user_id' => $user->id,
-            'restaurant_id' => $restaurant->id,
+            'user_id' => '',//未入力
+            'restaurant_id' => 'not_integer',// 整数でない
         ];
-        $response = $this->post('/api/favorite', $data);
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
+        $response = $this->actingAs($user)->post('/api/favorite', $data);
+        $response->assertStatus(302);
     }
 
+    //destroy
     public function test_destroy_favorite()
     {
-        //ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $item = Favorite::factory()->for($restaurant)->for($user)->create();
+
         $response = $this->actingAs($user)->delete('/api/favorite/' . $item->id);
+
         $response->assertStatus(200);
         $this->assertDeleted($item);
-    }
-
-    public function test_destroy_favorite_unauthorized()
-    {
-        //ユーザーが認証されていない
-        $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $item = Favorite::factory()->for($restaurant)->for($user)->create();
-        $response = $this->delete('/api/favorite/' . $item->id);
-        $response->assertStatus(409);
         $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
+            'message' => 'Deleted successfully'
         ]);
     }
+
+    //destroy
+    //パラメータに一致するデータがない場合
+    public function test_destroy_favorite_no_data()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->delete('/api/favorite/' . 1);
+
+        $response->assertStatus(404);
+    }
 }
-
-

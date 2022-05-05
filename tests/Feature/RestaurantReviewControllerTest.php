@@ -23,12 +23,14 @@ class RestaurantReviewControllerTest extends TestCase
      * @return void
      */
 
-    public function test_index_restaurantreview()
+    //index
+    public function test_index_restaurant_review()
     {
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
         $review = Review::factory()->for($restaurant)->for($reservation)->for($user)->create();
+
         $response = $this->get('/api/restaurantreview?restaurant_id=' . $review->restaurant_id);
         $response->assertStatus(200);
         $response->assertJsonFragment([

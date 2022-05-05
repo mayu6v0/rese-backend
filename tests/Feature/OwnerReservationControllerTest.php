@@ -19,29 +19,33 @@ class OwnerReservationControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_index_ownerreservation()
+
+    //ユーザーが認証されていない
+    public function test_owner_reservation_not_authenticated()
     {
-        // owner権限のあるuserが認証されている
-        $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $item = Reservation::factory()->for($restaurant)->for($user)->create();
-        $owner = User::factory()->create([
-            'authority' => 'owner',
-            'restaurant_id' => $item->restaurant_id
-        ]);
-        $response = $this->actingAs($owner)->get('/api/owner/reservation?restaurant_id=' . $item->restaurant_id);
-        $response->assertStatus(200);
+        $response = $this->get('/api/owner/reservation');
+        $response->assertStatus(409);
         $response->assertJsonFragment([
-            'user_id' => $item->user_id,
-            'restaurant_id' => $item->restaurant_id,
-            'datetime' => $item->datetime.':00',
-            'number' => $item->number
+            'message' => 'Your email address is not verified.'
         ]);
     }
 
-    public function test_index_ownerreservation_unauthorized()
+    //ユーザーがメール認証されていない
+    public function test_owner_reservation_not_email_verified()
     {
-        // ユーザー認証されているがowner権限がない
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+        $response = $this->actingAs($user)->get('/api/owner/reservation');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+    //ユーザー認証されているがowner権限がない
+    public function test_index_owner_reservation_unauthorized()
+    {
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $item = Reservation::factory()->for($restaurant)->for($user)->create();
@@ -56,9 +60,9 @@ class OwnerReservationControllerTest extends TestCase
         ]);
     }
 
-    public function test_index_ownerreservation_Not_authenticated()
+    // owner権限のあるuserが認証されている
+    public function test_index_owner_reservation()
     {
-        // ユーザー認証されていない
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $item = Reservation::factory()->for($restaurant)->for($user)->create();
@@ -66,10 +70,13 @@ class OwnerReservationControllerTest extends TestCase
             'authority' => 'owner',
             'restaurant_id' => $item->restaurant_id
         ]);
-        $response = $this->get('/api/owner/reservation?restaurant_id=' . $item->restaurant_id);
-        $response->assertStatus(409);
+        $response = $this->actingAs($owner)->get('/api/owner/reservation?restaurant_id=' . $item->restaurant_id);
+        $response->assertStatus(200);
         $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
+            'user_id' => $item->user_id,
+            'restaurant_id' => $item->restaurant_id,
+            'datetime' => $item->datetime.':00',
+            'number' => $item->number
         ]);
     }
 }

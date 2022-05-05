@@ -20,9 +20,37 @@ class ReservationControllerTest extends TestCase
      *
      * @return void
      */
+
+    //ユーザーが認証されていない
+    public function test_index_reservation_not_authenticated()
+    {
+        $response = $this->get('/api/reservation');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+    //ユーザーがメール認証されていない
+    public function test_index_reservation_not_email_verified()
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+
+        $response = $this->actingAs($user)->get('/api/reservation');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+
+    //ユーザーがメール認証されている場合の各メソッドの確認
+
+    //index
     public function test_index_reservation()
     {
-        // ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $item = Reservation::factory()->for($restaurant)->for($user)->create();
@@ -36,22 +64,9 @@ class ReservationControllerTest extends TestCase
         ]);
     }
 
-    public function test_index_reservation_unauthorized()
-    {
-        // ユーザーが認証されていない
-        $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $item = Reservation::factory()->for($restaurant)->for($user)->create();
-        $response = $this->get('/api/reservation');
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
-    }
-
+    //store
     public function test_store_reservation()
     {
-        //ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $data = [
@@ -66,45 +81,104 @@ class ReservationControllerTest extends TestCase
         $this->assertDatabaseHas('reservations', $data);
     }
 
-    public function test_store_reservation_Not_authenticated()
+    //store
+    //バリデーションが通らない場合
+    public function test_store_reservation_failed_validation()
     {
-        //ユーザーが認証されていない
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
+        $data = [
+            'user_id' => '',//未入力
+            'restaurant_id' => $restaurant->id,
+            'datetime' => now()->addMinutes(60)->format('Y-m-d H:i:s'),//フォーマット違い
+            'number' => 10
+        ];
+        $response = $this->actingAs($user)->post('/api/reservation', $data);
+        $response->assertStatus(302);
+    }
+
+
+    //update
+    public function test_update_reservation()
+    {
+        $user = User::factory()->create();
+        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
+        $item = Reservation::factory()->for($restaurant)->for($user)->create();
+
         $data = [
             'user_id' => $user->id,
             'restaurant_id' => $restaurant->id,
             'datetime' => now()->addMinutes(60)->format('Y-m-d H:i'),
             'number' => 10
         ];
-        $response = $this->post('/api/reservation', $data);
-        $response->assertStatus(409);
+
+        $response = $this->actingAs($user)->put('/api/reservation/' . $item->id, $data);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('reservations', $data);
         $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
+            'message' => 'Updated successfully'
         ]);
     }
 
+    //update
+    //バリデーションが通らない場合
+    public function test_update_failed_validation()
+    {
+        $user = User::factory()->create();
+        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
+        $item = Reservation::factory()->for($restaurant)->for($user)->create();
+
+        $data = [
+            'user_id' => $user->id,
+            'restaurant_id' => '',//未入力
+            'datetime' => now()->addMinutes(60)->format('Y-m-d H:i'),
+            'number' => 'not_integer'//整数でない
+        ];
+
+        $response = $this->actingAs($user)->put('/api/reservation/' . $item->id, $data);
+        $response->assertStatus(302);
+    }
+
+    //update
+    //パラメータに一致するデータがない場合
+    public function test_update_no_data()
+    {
+        $user = User::factory()->create();
+        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
+        $item = Reservation::factory()->for($restaurant)->for($user)->create();
+
+        $data = [
+            'user_id' => $user->id,
+            'restaurant_id' => $restaurant->id,
+            'datetime' => now()->addMinutes(60)->format('Y-m-d H:i'),
+            'number' => 10
+        ];
+
+        $response = $this->actingAs($user)->put('/api/reservation/1', $data);
+        $response->assertStatus(404);
+    }
+
+    //destroy
     public function test_destroy_reservation()
     {
-        // ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $item = Reservation::factory()->for($restaurant)->for($user)->create();
         $response = $this->actingAs($user)->delete('/api/reservation/' . $item->id);
         $response->assertStatus(200);
         $this->assertDeleted($item);
+        $response->assertJsonFragment([
+            'message' => 'Deleted successfully'
+        ]);
     }
 
-    public function test_destroy_reservation_Not_authenticated()
+    //destory
+    //パラメータに一致するデータがない場合
+    public function test_destroy_reservation_no_data()
     {
-        // ユーザーが認証されていない
         $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $item = Reservation::factory()->for($restaurant)->for($user)->create();
-        $response = $this->delete('/api/reservation/' . $item->id);
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
+
+        $response = $this->actingAs($user)->delete('/api/reservation/1');
+        $response->assertStatus(404);
     }
 }

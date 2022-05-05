@@ -10,9 +10,9 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_users_can_authenticate_using_the_login_screen()
+    //正常にログインできる
+    public function test_login()
     {
-        //正常にログインできることを確認
         $user = User::factory()->create();
 
         $response = $this->post('/api/auth/login', [
@@ -24,7 +24,7 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password()
+    public function test_login_with_invalid_password()
     {
         //間違ったパスワードの場合ログインできないことを確認
         $user = User::factory()->create();

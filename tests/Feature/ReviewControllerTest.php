@@ -20,9 +20,35 @@ class ReviewControllerTest extends TestCase
      *
      * @return void
      */
+
+    //ユーザーが認証されていない場合アクセスできない
+    public function test_review_not_authenticated_users_can_not_access()
+    {
+        $response = $this->get('/api/review');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+    //ユーザーがメール認証されていない場合アクセスできない
+    public function test_review_not_email_verified_users_can_not_access()
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+        ]);
+        $response = $this->actingAs($user)->get('/api/review');
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+    //ユーザーがメール認証されている場合の各メソッドの確認
+
+    //index
     public function test_index_review()
     {
-        // ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
@@ -39,23 +65,10 @@ class ReviewControllerTest extends TestCase
         ]);
     }
 
-    public function test_index_review_Not_authenticated()
-    {
-        // ユーザーが認証されていない
-        $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
-        $review = Review::factory()->for($restaurant)->for($reservation)->for($user)->create();
-        $response = $this->get('/api/review');
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
-    }
 
+    //store
     public function test_store_review()
     {
-        // ユーザーが認証されている
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
@@ -73,24 +86,23 @@ class ReviewControllerTest extends TestCase
         $this->assertDatabaseHas('reviews', $data);
     }
 
-    public function test_store_review_Not_authenticated()
+
+    //store
+    //バリデーションが通らない場合
+    public function test_store_review_failed_validation()
     {
-        // ユーザーが認証されていない
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
         $data = [
-            'user_id' => $user->id,
+            'user_id' => '',//未入力
             'restaurant_id' => $restaurant->id,
             'reservation_id' => $reservation->id,
-            'rating' => 5,
+            'rating' => 'not_integer',//整数でない
             'title' => 'レビューのタイトル',
             'review' => 'レビューの本文',
         ];
-        $response = $this->post('/api/review', $data);
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
+        $response = $this->actingAs($user)->post('/api/review', $data);
+        $response->assertStatus(302);
     }
 }

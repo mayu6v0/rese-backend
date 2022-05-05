@@ -22,9 +22,39 @@ class ReservationCheckControllerTest extends TestCase
      *
      * @return void
      */
+
+    // ユーザー認証されていない
+    public function test_reservation_check_not_authenticated()
+    {
+        $user = User::factory()->create();
+        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
+        $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
+        $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation->id]);
+        $response = $this->get($signed_url);
+        $response->assertStatus(409);
+        $response->assertJsonFragment([
+            'message' => 'Your email address is not verified.'
+        ]);
+    }
+
+    // ユーザー認証されているがowner権限がない
+    public function test_reservation_check_unauthorized()
+    {
+        $user_not_owner = User::factory()->create();
+        $user = User::factory()->create();
+        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
+        $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
+        $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation->id]);
+        $response = $this->actingAs($user_not_owner)->get($signed_url);
+        $response->assertStatus(403);
+        $response->assertJsonFragment([
+            'message' => '権限がありません'
+        ]);
+    }
+
+    // owner権限のあるuserが認証されている
     public function test_reservation_check_authorized()
     {
-        // owner権限のあるuserが認証されている
         $owner = User::factory()->create([
             'authority' => 'owner',
         ]);
@@ -42,32 +72,27 @@ class ReservationCheckControllerTest extends TestCase
         ]);
     }
 
-    public function test_reservation_check_unauthorized()
+    // owner権限のあるuserが認証されている
+    // 照合URLが異なる
+    public function test_reservation_check_authorized_with_wrong_URL()
     {
-        // ユーザー認証されているがowner権限がない
-        $user_not_owner = User::factory()->create();
+        $owner = User::factory()->create([
+            'authority' => 'owner',
+        ]);
         $user = User::factory()->create();
         $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
         $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
-        $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation->id]);
-        $response = $this->actingAs($user_not_owner)->get($signed_url);
-        $response->assertStatus(403);
+        $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => 'wrong-id']);
+        $response = $this->actingAs($owner)->get($signed_url);
+        $response->assertStatus(404);
         $response->assertJsonFragment([
-            'message' => '権限がありません'
+            'message' => 'Not found'
         ]);
-    }
-
-    public function test_reservation_check_Not_authenticated()
-    {
-        // ユーザー認証されていない
-        $user = User::factory()->create();
-        $restaurant = Restaurant::factory()->for(Area::factory()->create())->for(Genre::factory()->create())->create();
-        $reservation = Reservation::factory()->for($restaurant)->for($user)->create();
-        $signed_url = URL::signedRoute('reservation.check', ['reservation_id' => $reservation->id]);
-        $response = $this->get($signed_url);
-        $response->assertStatus(409);
-        $response->assertJsonFragment([
-            'message' => 'Your email address is not verified.'
-        ]);
+        // $response->assertJsonFragment([
+        //     'user_id' => $reservation->user_id,
+        //     'restaurant_id' => $reservation->restaurant_id,
+        //     'datetime' => $reservation->datetime . ':00',
+        //     'number' => $reservation->number
+        // ]);
     }
 }

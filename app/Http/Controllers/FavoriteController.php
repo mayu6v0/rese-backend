@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Favorite;
 use Illuminate\Http\Request;
+use App\Http\Requests\FavoriteRequest;
 
 class FavoriteController extends Controller
 {
@@ -16,7 +17,7 @@ class FavoriteController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(FavoriteRequest $request)
     {
         $item = Favorite::create($request->all());
         return response()->json([
