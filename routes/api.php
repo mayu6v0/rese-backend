@@ -46,8 +46,8 @@ Route::middleware(['verified'])->group(function () {
 
 Route::middleware(['verified', 'admin'])->group(function() {
     Route::post('/sendmail', [SendEmailController::class, 'sendmail']);
-    Route::get('/auth/owner', [AuthController::class, 'owner']);
-    Route::get('/auth/admin', [AuthController::class, 'admin']);
+    Route::get('/auth/owner', [AuthController::class, 'get_owner']);
+    Route::get('/auth/admin', [AuthController::class, 'get_admin']);
 });
 
 Route::middleware(['verified', 'owner'])->group(function () {
