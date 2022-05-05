@@ -92,14 +92,14 @@ class AuthController extends Controller
         }
     }
 
-    public function owner()
+    public function get_owner()
     {
         $items = User::with('restaurant')->where('authority', 'owner')->get();
         return response()->json([
             'data' => $items
         ], 200);
     }
-    public function admin()
+    public function get_admin()
     {
         $items = User::with('restaurant')->where('authority', 'admin')->get();
         return response()->json([
