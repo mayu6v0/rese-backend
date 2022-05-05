@@ -19,7 +19,7 @@ class RestaurantsTableSeeder extends Seeder
             'area_id' => 1,
             'genre_id' => 1,
             'overview' => '料理長厳選の食材から作る寿司を用いたコースをぜひお楽しみください。食材・味・価格、お客様の満足度を徹底的に追及したお店です。特別な日のお食事、ビジネス接待まで気軽に使用することができます。',
-            'image_url' => 'https://m-rese.s3.ap-northeast-1.amazonaws.com/image/image/sushi.jpg'
+            'image_url' => 'https://m-rese.s3.ap-northeast-1.amazonaws.com/image/sushi.jpg'
         ];
         DB::table('restaurants')->insert($param);
         $param = [
